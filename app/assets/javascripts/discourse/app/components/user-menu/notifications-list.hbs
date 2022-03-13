@@ -1,0 +1,14 @@
+{{#if this.loading}}
+  <div class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+{{else if this.items.length}}
+  <ul>
+    {{#each this.items as |notification|}}
+      <UserMenu::DefaultNotificationItem @notification={{notification}}/>
+    {{/each}}
+  </ul>
+{{else}}
+  {{! TODO: blank page syndrome}}
+  <h1>nothing here bro</h1>
+{{/if}}

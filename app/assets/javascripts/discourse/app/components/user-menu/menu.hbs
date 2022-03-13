@@ -1,0 +1,31 @@
+<div class="user-menu revamped menu-panel drop-down" data-click-outside="true" style="width: 320px"> <!-- todo handle click outside -->
+  <div class="panel-body">
+    <div class="panel-body-contents">
+      <div
+        id={{concat "quick-access-" this.currentTabId}}
+        class="quick-access-panel"
+        tabindex="-1"
+        aria-labelledby={{concat "user-menu-button-" this.currentTabId}}>
+        <this.currentPanelComponent/>
+      </div>
+      <div class="menu-tabs-container" role="tablist" aria-label="Menu links"> <!-- aria-label i18n-->
+        <div class="top-tabs tabs-list">
+          {{#each this.topTabs as |tab index|}}
+            <UserMenu::Button
+              @icon={{tab.icon}}
+              @onClick={{fn this.changeTab tab}}
+              id={{concat "user-menu-button-" tab.id}}
+              class={{if (eq tab.id this.currentTabId) "active"}}
+              aria-selected={{if (eq tab.id this.currentTabId) "true" "false"}}
+            />
+          {{/each}}
+        </div>
+        <div class="bottom-tabs tabs-list">
+          <UserMenu::Button
+            @icon="wrench"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

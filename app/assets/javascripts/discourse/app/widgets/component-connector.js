@@ -2,16 +2,25 @@ import { getOwner } from "@ember/application";
 import { scheduleOnce } from "@ember/runloop";
 
 export default class ComponentConnector {
-  constructor(widget, componentName, opts, trackedProperties) {
+  constructor(
+    widget,
+    componentName,
+    opts,
+    trackedProperties,
+    { applyStyle = true } = {}
+  ) {
     this.widget = widget;
     this.opts = opts;
     this.componentName = componentName;
     this.trackedProperties = trackedProperties || [];
+    this.applyStyle = applyStyle;
   }
 
   init() {
     const elem = document.createElement("div");
-    elem.style.display = "inline-flex";
+    if (this.applyStyle) {
+      elem.style.display = "inline-flex";
+    }
     elem.className = "widget-component-connector";
     this.elem = elem;
     scheduleOnce("afterRender", this, this.connectComponent);

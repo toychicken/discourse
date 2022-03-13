@@ -1956,6 +1956,10 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  enable_revamped_user_menu:
+    default: false
+    client: true
+    hidden: true
 
 embedding:
   embed_by_username:

@@ -1,0 +1,11 @@
+<li class={{className}}>
+  {{#if this.url}}
+    <a href={{this.url}}>
+      {{d-icon this.icon}}
+      <this.contentComponent @notification={{@notification}}/>
+    </a>
+  {{else}}
+    {{d-icon this.icon}}
+    <this.contentComponent @notification={{@notification}}/>
+  {{/if}}
+</li>

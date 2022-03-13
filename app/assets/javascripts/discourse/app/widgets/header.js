@@ -11,6 +11,7 @@ import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
+import ComponentConnector from "discourse/widgets/component-connector";
 
 const _extraHeaderIcons = [];
 
@@ -378,8 +379,16 @@ export default createWidget("header", {
         );
       } else if (state.hamburgerVisible) {
         panels.push(this.attach("hamburger-menu"));
-      } else if (state.userVisible) {
-        panels.push(this.attach("user-menu"));
+      } else if (true || state.userVisible) { // TODO: remove true
+        if (this.siteSettings.enable_revamped_user_menu) {
+          panels.push(
+            new ComponentConnector(this, "user-menu-wrapper", {}, [], {
+              applyStyle: false,
+            })
+          );
+        } else {
+          panels.push(this.attach("user-menu"));
+        }
       }
 
       additionalPanels.map((panel) => {

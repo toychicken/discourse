@@ -1,0 +1,16 @@
+<span>{{this.username}}</span>
+{{#if this.groupName}}
+  {{#if this.fancyTitle}}
+    {{#if this.topicId}}
+      <span class="mention-group notify">
+        {{this.groupName}}
+        <span data-topic-id={{this.topicId}}>{{this.fancyTitle}}</span>
+      </span>
+    {{else}}
+      <span class="mention-group notify">
+        {{this.groupName}}
+      </span>
+      {{this.fancyTitle}}
+    {{/if}}
+  {{/if}}
+{{/if}}

@@ -90,6 +90,19 @@
   }
 }
 
+.user-menu.revamped {
+  .menu-tabs-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .tabs-list {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .hamburger-panel {
   a.widget-link {
     width: 100%;

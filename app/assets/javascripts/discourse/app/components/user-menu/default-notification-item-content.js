@@ -1,17 +1,21 @@
 import GlimmerComponent from "discourse/components/glimmer";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
 import { formatUsername } from "discourse/lib/utilities";
 
 export default class UserMenuDefaultNotificationItemContent extends GlimmerComponent {
-  get username() {
-    return formatUsername(this.args.notification.data.display_username);
+  get data() {
+    return this.args.notification.data;
   }
 
-  get description() {}
+  get username() {
+    return formatUsername(this.data.display_username);
+  }
 
   get fancyTitle() {
     return this.args.notification.fancy_title;
+  }
+
+  get topicTitle() {
+    return this.data.topic_title;
   }
 
   get topicId() {
@@ -19,6 +23,6 @@ export default class UserMenuDefaultNotificationItemContent extends GlimmerCompo
   }
 
   get groupName() {
-    return this.args.notification.data.group_name;
+    return this.data.group_name;
   }
 }

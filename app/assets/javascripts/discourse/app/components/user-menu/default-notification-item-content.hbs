@@ -3,14 +3,22 @@
   {{#if this.fancyTitle}}
     {{#if this.topicId}}
       <span class="mention-group notify">
-        {{this.groupName}}
-        <span data-topic-id={{this.topicId}}>{{this.fancyTitle}}</span>
+        @{{this.groupName}}
+        <span data-topic-id={{this.topicId}}>{{html-safe this.fancyTitle}}</span>
       </span>
     {{else}}
-      <span class="mention-group notify">
-        {{this.groupName}}
-      </span>
-      {{this.fancyTitle}}
+      <span class="mention-group notify">@{{this.groupName}}</span>
+      {{html-safe this.fancyTitle}}
     {{/if}}
   {{/if}}
+{{else if this.fancyTitle}}
+  {{#if this.topicId}}
+    <span data-topic-id={{this.topicId}}>
+      {{html-safe this.fancyTitle}}
+    </span>
+  {{else}}
+    {{html-safe this.fancyTitle}}
+  {{/if}}
+{{else if this.topicTitle}}
+  {{this.topicTitle}}
 {{/if}}

@@ -2,8 +2,6 @@ import UserMenuDefaultNotificationItem from "discourse/components/user-menu/defa
 import getURL from "discourse-common/lib/get-url";
 
 export default class UserMenuGrantedBadgeNotificationItem extends UserMenuDefaultNotificationItem {
-  contentComponent = "user-menu/granted-badge-notification-item-content";
-
   get url() {
     const notification = this.args.notification;
     const data = notification.data;

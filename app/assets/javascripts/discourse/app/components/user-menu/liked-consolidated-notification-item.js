@@ -2,8 +2,6 @@ import UserMenuDefaultNotificationItem from "discourse/components/user-menu/defa
 import { userPath } from "discourse/lib/url";
 
 export default class UserMenuLikedConsolidatedNotificationItem extends UserMenuDefaultNotificationItem {
-  contentComponent = "user-menu/liked-consolidated-notification-item-content";
-
   get url() {
     return userPath(
       `${

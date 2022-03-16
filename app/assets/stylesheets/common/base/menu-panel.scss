@@ -101,6 +101,11 @@
     display: flex;
     flex-direction: column;
   }
+
+  .panel-body-contents {
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 .hamburger-panel {

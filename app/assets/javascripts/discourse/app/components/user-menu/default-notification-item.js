@@ -1,48 +1,45 @@
 import GlimmerComponent from "discourse/components/glimmer";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { postUrl } from "discourse/lib/utilities";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import { formatUsername } from "discourse/lib/utilities";
 
-// TODO handle notification icon aria stuff
 export default class UserMenuDefaultNotificationItem extends GlimmerComponent {
-  contentComponent = "user-menu/default-notification-item-content";
-  get data() {
-    return this.args.notification.data;
-  }
-
   get notificationName() {
     const notification = this.args.notification;
     return this.site.notificationLookup[notification.notification_type];
   }
 
-  get className() {
-    // TODO handle mod warning message in pm notification item
-    const classes = [];
-    const notification = this.args.notification;
-    if (notification.read) {
-      classes.push("read");
-    }
-    if (this.notificationName) {
-      classes.push(this.notificationName.replace(/_/g, "-"));
-    }
-    return classes.join(" ");
+  get data() {
+    return this.args.notification.data;
   }
 
-  get url() {
-    const notification = this.args.notification;
-    const data = this.data;
-    const topicId = notification.topic_id;
-    if (topicId) {
-      return postUrl(notification.slug, topicId, notification.post_number);
-    }
+  get username() {
+    return formatUsername(this.data.display_username);
+  }
 
-    if (data.group_id) {
-      return userPath(`${data.username}/messages/group/${data.group_name}`);
-    }
+  get fancyTitle() {
+    return this.args.notification.fancy_title;
+  }
+
+  get topicTitle() {
+    return this.data.topic_title;
+  }
+
+  get topicId() {
+    return this.args.notification.topic_id;
+  }
+
+  get groupName() {
+    return this.data.group_name;
   }
 
   get icon() {
-    return `notification.${this.notificationName}`;
+    return null;
+  }
+
+  get title() {
+    if (this.notificationName) {
+      return I18n.t(`notifications.titles.${this.notificationName}`);
+    } else {
+      return "";
+    }
   }
 }

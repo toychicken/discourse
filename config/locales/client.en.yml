@@ -2302,6 +2302,7 @@ en:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> accepted your invitation"
+      invitee_accepted_your_invitation: "accepted your invitation"
       moved_post: "<span>%{username}</span> moved %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Earned '%{description}'"

@@ -1,3 +1,0 @@
-import UserMenuDefaultNotificationItemContent from "discourse/components/user-menu/default-notification-item-content";
-
-export default class UserMenuLikedConsolidatedNotificationItemContent extends UserMenuDefaultNotificationItemContent {}

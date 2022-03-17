@@ -91,20 +91,46 @@
 }
 
 .user-menu.revamped {
+  right: 0;
+  width: unset;
+  padding: 0;
+
   .menu-tabs-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border-left: 1px solid var(--primary-low);
   }
 
   .tabs-list {
     display: flex;
     flex-direction: column;
+
+    button {
+      display: flex;
+      padding: 0.857em;
+
+      &.active {
+        background-color: var(--tertiary-low);
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+      &:hover,
+      &:focus {
+        background-color: var(--tertiary-very-low);
+      }
+    }
   }
 
   .panel-body-contents {
     display: flex;
     flex-direction: row;
+  }
+
+  .quick-access-panel {
+    width: 320px;
+    padding: 0.75em 0 0.75em 0.75em;
   }
 }
 

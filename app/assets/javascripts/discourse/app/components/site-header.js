@@ -428,7 +428,10 @@ const SiteHeaderComponent = MountWidget.extend(
           document.body.classList.remove("drop-down-mode");
         }
 
-        panel.style.setProperty("width", `${width}px`);
+        // TODO: handle this better???
+        if (!panel.classList.contains("revamped")) {
+          panel.style.setProperty("width", `${width}px`);
+        }
         if (this._animate) {
           this._animateOpening(panel);
         }

@@ -10,7 +10,19 @@ export default class UserMenu extends GlimmerComponent {
   @tracked currentPanelComponent = DefaultPanelComponent;
 
   get topTabs() {
-    return this._coreTopTabs;
+    // TODO: handle keyboard navigation, see commit 5276d43
+    return this._coreTopTabs.map((tab, index) => {
+      tab.position = index;
+      return tab;
+    });
+  }
+
+  get bottomTabs() {
+    const topTabsLength = this.topTabs.length;
+    return this._coreBottomTabs.map((tab, index) => {
+      tab.position = index + topTabsLength;
+      return tab;
+    });
   }
 
   get _coreTopTabs() {
@@ -23,17 +35,27 @@ export default class UserMenu extends GlimmerComponent {
       {
         id: "replies",
         icon: "reply",
-        panelComponent: ""
+        panelComponent: "",
       },
       {
         id: "mentions",
         icon: "at",
-        panelComponent: ""
+        panelComponent: "",
       },
       {
         id: "likes",
         icon: "heart",
-        panelComponent: ""
+        panelComponent: "",
+      },
+    ];
+  }
+
+  get _coreBottomTabs() {
+    return [
+      {
+        id: "preferences",
+        icon: "user-cog",
+        href: `${this.currentUser.path}/preferences`,
       },
     ];
   }

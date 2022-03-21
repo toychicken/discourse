@@ -379,7 +379,7 @@ export default createWidget("header", {
         );
       } else if (state.hamburgerVisible) {
         panels.push(this.attach("hamburger-menu"));
-      } else if (true || state.userVisible) { // TODO: remove true
+      } else if (state.userVisible) {
         if (this.siteSettings.enable_revamped_user_menu) {
           panels.push(
             new ComponentConnector(this, "user-menu-wrapper", {}, [], {

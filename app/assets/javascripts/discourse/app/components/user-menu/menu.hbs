@@ -10,20 +10,28 @@
       </div>
       <div class="menu-tabs-container" role="tablist" aria-label="Menu links"> <!-- aria-label i18n-->
         <div class="top-tabs tabs-list">
-          {{#each this.topTabs as |tab index|}}
+          {{#each this.topTabs as |tab|}}
             <UserMenu::Button
               @icon={{tab.icon}}
               @onClick={{fn this.changeTab tab}}
               id={{concat "user-menu-button-" tab.id}}
               class={{if (eq tab.id this.currentTabId) "active"}}
+              tabindex={{if (eq tab.id this.currentTabId) "0" "-1"}}
               aria-selected={{if (eq tab.id this.currentTabId) "true" "false"}}
+              aria-controls={{concat "quick-access-" tab.id}}
+              data-tab-number={{tab.position}}
             />
           {{/each}}
         </div>
         <div class="bottom-tabs tabs-list">
-          <UserMenu::Button
-            @icon="wrench"
-          />
+          {{#each this.bottomTabs as |tab|}}
+            <UserMenu::Button
+              @icon={{tab.icon}}
+              @href={{tab.href}}
+              tabindex={{if (eq tab.id this.currentTabId) "0" "-1"}}
+              data-tab-number={{tab.position}}
+            />
+          {{/each}}
         </div>
       </div>
     </div>

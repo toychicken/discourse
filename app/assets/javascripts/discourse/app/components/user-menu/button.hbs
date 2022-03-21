@@ -1,8 +1,19 @@
-<button
-  class="btn-flat btn-icon no-text"
-  role="tab"
-  {{on "click" this.onClick}}
-  ...attributes
->
-  {{d-icon @icon}}
-</button>
+{{#if @href}}
+  <a
+    class="btn btn-flat btn-icon no-text"
+    role="tab"
+    href={{@href}}
+    ...attributes
+  >
+    {{d-icon @icon}}
+  </a>
+{{else}}
+  <button
+    class="btn btn-flat btn-icon no-text"
+    role="tab"
+    {{on "click" this.onClick}}
+    ...attributes
+  >
+    {{d-icon @icon}}
+  </button>
+{{/if}}

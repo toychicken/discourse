@@ -332,6 +332,23 @@ export default createWidget("header", {
   buildKey: () => `header`,
   services: ["router", "search"],
 
+  init() {
+    this.appEvents.on("header:close-user-menu", this, "_userMenuCloseListener");
+  },
+
+  destroy() {
+    this.appEvents.off(
+      "header:close-user-menu",
+      this,
+      "_userMenuCloseListener"
+    );
+  },
+
+  _userMenuCloseListener() {
+    this.state.userVisible = false;
+    this.scheduleRerender();
+  },
+
   defaultState() {
     let states = {
       searchVisible: false,

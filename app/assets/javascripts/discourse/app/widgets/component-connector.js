@@ -14,6 +14,7 @@ export default class ComponentConnector {
     this.componentName = componentName;
     this.trackedProperties = trackedProperties || [];
     this.applyStyle = applyStyle;
+    this._component = null;
   }
 
   init() {
@@ -26,6 +27,10 @@ export default class ComponentConnector {
     scheduleOnce("afterRender", this, this.connectComponent);
 
     return this.elem;
+  }
+
+  destroy() {
+    this._component?.destroy();
   }
 
   update(prev) {
@@ -63,6 +68,7 @@ export default class ComponentConnector {
 
     mounted._connected.push(component);
     component.renderer.appendTo(component, elem);
+    this._component = component;
   }
 }
 

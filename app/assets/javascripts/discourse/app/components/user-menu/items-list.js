@@ -33,49 +33,11 @@ export default class UserMenuNotificationsList extends GlimmerComponent {
 
   constructor() {
     super(...arguments);
-    this.fetchNotifications();
+    this._load();
   }
 
   get filterByType() {
     return null;
-  }
-
-  fetchNotifications() {
-    this.loading = true;
-
-    const params = {
-      recent: true,
-      silent: this.currentUser.enforcedSecondFactor,
-      limit: 30,
-    };
-    let cacheKey = "recent-notifications";
-    if (this.filterByType) {
-      params.filter_by_type = this.filterByType;
-      cacheKey += `-type-${this.filterByType}`;
-    }
-
-    this.store
-      .findStale("notification", params, { cacheKey })
-      .refresh()
-      .then((data) => {
-        this.items = data.content.map((notification) => {
-          const name = this.site.notificationLookup[
-            notification.notification_type
-          ];
-          if (_componentForType[name]) {
-            return {
-              ...notification,
-              component: _componentForType[name],
-            };
-          } else {
-            return notification;
-          }
-        });
-        return this.items;
-      })
-      .finally(() => {
-        this.loading = false;
-      });
   }
 
   get showAllHref() {
@@ -92,6 +54,45 @@ export default class UserMenuNotificationsList extends GlimmerComponent {
 
   get showDismiss() {
     return this.items.some((item) => !item.read);
+  }
+
+  fetchItems() {
+    const params = {
+      recent: true,
+      silent: this.currentUser.enforcedSecondFactor,
+      limit: 30,
+    };
+    let cacheKey = "recent-notifications";
+    if (this.filterByType) {
+      params.filter_by_type = this.filterByType;
+      cacheKey += `-type-${this.filterByType}`;
+    }
+
+    return this.store
+      .findStale("notification", params, { cacheKey })
+      .refresh()
+      .then((data) => {
+        return data.content.map((notification) => {
+          const name = this.site.notificationLookup[
+            notification.notification_type
+          ];
+          if (_componentForType[name]) {
+            return {
+              ...notification,
+              component: _componentForType[name],
+            };
+          } else {
+            return notification;
+          }
+        });
+      });
+  }
+
+  _load() {
+    this.loading = true;
+    this.fetchItems()
+      .then((items) => (this.items = items))
+      .finally(() => (this.loading = false));
   }
 
   @action

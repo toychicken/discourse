@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
 
 const DefaultTabId = "all-notifications";
-const DefaultPanelComponent = "user-menu/notifications-list";
+const DefaultPanelComponent = "user-menu/items-list";
 
 export default class UserMenu extends GlimmerComponent {
   @tracked currentTabId = DefaultTabId;
@@ -26,7 +26,7 @@ export default class UserMenu extends GlimmerComponent {
   }
 
   get _coreTopTabs() {
-    return [
+    const list = [
       {
         id: DefaultTabId,
         icon: "bell",
@@ -62,6 +62,17 @@ export default class UserMenu extends GlimmerComponent {
         panelComponent: "user-menu/badges-notifications-list",
       },
     ];
+
+    if (this.currentUser.can_review) {
+      list.push({
+        id: "review-queue",
+        icon: "flag",
+        panelComponent: "user-menu/reviewables-list",
+        count: this.currentUser.reviewable_count, // TODO add this count to the avatar bubble
+      });
+    }
+
+    return list;
   }
 
   get _coreBottomTabs() {

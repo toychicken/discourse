@@ -534,6 +534,18 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
+  def self.lightweight_list_for(user)
+    pending_first = DB.sql_fragment(
+      "CASE WHEN reviewables.status = :pending THEN 0 ELSE 1 END",
+      statuses[:pending]
+    )
+    Reviewable
+      .viewable_by(user)
+      .except(:order)
+      .order(pending_first, 'reviewables.created_at DESC')
+      .limit(30)
+  end
+
   def serializer
     self.class.serializer_for(self)
   end

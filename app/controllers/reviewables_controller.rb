@@ -69,6 +69,9 @@ class ReviewablesController < ApplicationController
     render_json_dump(json, rest_serializer: true)
   end
 
+  def lightweight_index
+  end
+
   def count
     render_json_dump(count: Reviewable.pending_count(current_user))
   end

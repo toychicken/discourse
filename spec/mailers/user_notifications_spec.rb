@@ -589,25 +589,25 @@ describe UserNotifications do
       expect(mail.subject).to include("[PM] ")
     end
 
-    it "includes a list of participants (except for the destination user), groups first with member lists" do
-      group1 = Fabricate(:group, name: "group1")
-      group2 = Fabricate(:group, name: "group2")
-
-      user1 = Fabricate(:user, username: "one", groups: [group1, group2])
-      user2 = Fabricate(:user, username: "two", groups: [group1])
-
-      topic.allowed_users = [user, user1, user2]
-      topic.allowed_groups = [group1, group2]
-
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
-
-      expect(mail.body).to include("[group1 (2)](http://test.localhost/g/group1), [group2 (1)](http://test.localhost/g/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
-    end
+    # it "includes a list of participants (except for the destination user), groups first with member lists" do
+    #   group1 = Fabricate(:group, name: "group1")
+    #   group2 = Fabricate(:group, name: "group2")
+    #
+    #   user1 = Fabricate(:user, username: "one", groups: [group1, group2])
+    #   user2 = Fabricate(:user, username: "two", groups: [group1])
+    #
+    #   topic.allowed_users = [user, user1, user2]
+    #   topic.allowed_groups = [group1, group2]
+    #
+    #   mail = UserNotifications.user_private_message(
+    #     user,
+    #     post: response,
+    #     notification_type: notification.notification_type,
+    #     notification_data_hash: notification.data_hash
+    #   )
+    #
+    #   expect(mail.body).to include("[group1 (2)](http://test.localhost/g/group1), [group2 (1)](http://test.localhost/g/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
+    # end
 
     context "when SiteSetting.group_name_in_subject is true" do
       before do
@@ -1085,5 +1085,37 @@ describe UserNotifications do
       end
     end
 
+  end
+
+  describe "#participants" do
+    let(:response_by_user) { Fabricate(:user, name: "", username: "john") }
+    let(:topic) { Fabricate(:private_message_topic, title: "Super cool topic") }
+    let(:post) { Fabricate(:post, topic: topic) }
+    let(:response) { Fabricate(:post, topic: topic, user: response_by_user) }
+    let(:user) { Fabricate(:user) }
+
+    it "returns a list of participants (except for the recipient), groups first with member lists" do
+      SiteSetting.max_participant_names =
+
+      group1 = Fabricate(:group, name: "group1")
+      group2 = Fabricate(:group, name: "group2")
+
+      user1 = Fabricate(:user, username: "one", groups: [group1, group2])
+      user2 = Fabricate(:user, username: "two", groups: [group1])
+
+      topic.allowed_users = [user, user1, user2]
+      topic.allowed_groups = [group1, group2]
+
+      UserNotifications.participants()
+
+      mail = UserNotifications.user_private_message(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.body).to include("[group1 (2)](http://test.localhost/g/group1), [group2 (1)](http://test.localhost/g/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
+    end
   end
 end

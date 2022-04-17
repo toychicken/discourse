@@ -1,22 +1,27 @@
-import I18n from "I18n";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
-import { Promise } from "rsvp";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+
+const DefaultComponent = "user-menu/reviewable-item";
+function defaultItemComponents() {
+  return {
+    ReviewableFlaggedPost: "user-menu/reviewable-flagged-post",
+    ReviewableQueuedPost: "user-menu/reviewable-queued-post",
+    ReviewableUser: "user-menu/reviewable-user",
+  };
+}
+
+let _itemComponents = defaultItemComponents();
 
 export default class UserMenuReviewablesList extends UserMenuItemsList {
-  get showAllHref() {
-    return false; // TODO we need a show all button
-  }
-
-  get showAllTitle() {
-    // TODO add title
-    // return I18n.t("user_menu.view_all_notifications");
-  }
-
-  get showDismiss() {
-    return false;
-  }
-
   fetchItems() {
-    return Promise.resolve([]);
+    return ajax("/review/lightweight-list").then((data) => {
+      return data.reviewables.map((item) => {
+        const type = item.type;
+        delete item.type;
+        item.component = _itemComponents[type] || DefaultComponent;
+        return item;
+      });
+    });
   }
 }

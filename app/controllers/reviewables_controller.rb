@@ -70,6 +70,11 @@ class ReviewablesController < ApplicationController
   end
 
   def lightweight_index
+    reviewables = Reviewable.recent_list_with_pending_first(current_user).to_a
+    json = {
+      reviewables: reviewables.map! { |r| r.basic_serializer.new(r, scope: guardian, root: nil).as_json }
+    }
+    render_json_dump(json, rest_serializer: true)
   end
 
   def count

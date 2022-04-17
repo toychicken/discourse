@@ -1,0 +1,23 @@
+{{#if this.loading}}
+  <div class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+{{else if this.items.length}}
+  <ul>
+    {{#each this.items as |reviewable|}}
+      <reviewable.component @reviewable={{reviewable}}/>
+    {{/each}}
+  </ul>
+  <div class="panel-body-bottom">
+    <a
+      href={{get-url "/review"}}
+      class="btn btn-default btn-icon no-text show-all"
+      title={{i18n "user_menu.reviewable.view_all"}}
+    >
+      {{d-icon "chevron-down"}}
+    </a>
+  </div>
+{{else}}
+  {{! TODO: blank page syndrome}}
+  <h1>nothing here bro</h1>
+{{/if}}

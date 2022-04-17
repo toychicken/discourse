@@ -75,8 +75,8 @@ createWidget("header-notifications", {
       if (this.siteSettings.enable_revamped_user_menu) {
         const unread = user.unread_notifications || 0;
         const unreadHighPriority = user.unread_high_priority_notifications || 0;
-        // TODO reviewables
-        const count = unread + unreadHighPriority;
+        const reviewables = user.reviewable_count || 0;
+        const count = unread + unreadHighPriority + reviewables;
         if (unreadHighPriority && this._shouldHighlightAvatar()) {
           this._addAvatarHighlight(contents);
         }
@@ -285,7 +285,11 @@ createWidget("header-icons", {
 
       contents() {
         let { currentUser } = this;
-        if (currentUser && currentUser.reviewable_count) {
+        if (
+          currentUser &&
+          currentUser.reviewable_count &&
+          !this.siteSettings.enable_revamped_user_menu
+        ) {
           return h(
             "div.badge-notification.reviewables",
             {
@@ -431,8 +435,7 @@ export default createWidget("header", {
         );
       } else if (state.hamburgerVisible) {
         panels.push(this.attach("hamburger-menu"));
-      } else if (state.userVisible || true) {
-        // TODO: REMOVE ME
+      } else if (state.userVisible) {
         if (this.siteSettings.enable_revamped_user_menu) {
           panels.push(
             new ComponentConnector(this, "user-menu-wrapper", {}, [], {

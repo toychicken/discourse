@@ -5,10 +5,7 @@
     </label>
     {{future-date-input-selector
       value=(readonly selection)
-      includeDateTime=includeDateTime
-      includeWeekend=includeWeekend
-      includeFarFuture=includeFarFuture
-      includeNow=includeNow
+      content=shortcuts
       clearable=clearable
       onChangeInput=onChangeInput
       onChange=(action (mut selection))

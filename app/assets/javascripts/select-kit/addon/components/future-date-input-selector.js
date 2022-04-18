@@ -1,9 +1,6 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import buildTimeframes from "discourse/lib/timeframes-builder";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
@@ -26,25 +23,6 @@ export default ComboBoxComponent.extend({
 
   modifyComponentForRow() {
     return "future-date-input-selector/future-date-input-selector-row";
-  },
-
-  @discourseComputed
-  content() {
-    const opts = {
-      includeWeekend: this.includeWeekend,
-      includeFarFuture: this.includeFarFuture,
-      includeDateTime: this.includeDateTime,
-      canScheduleNow: this.includeNow || false,
-    };
-
-    return buildTimeframes(this.userTimezone, opts).map((tf) => {
-      return {
-        id: tf.id,
-        name: I18n.t(tf.label),
-        time: tf.time,
-        timeFormatted: tf.timeFormatted,
-      };
-    });
   },
 
   actions: {

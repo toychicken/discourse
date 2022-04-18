@@ -5,6 +5,7 @@ import buildTimeframes from "discourse/lib/timeframes-builder";
 import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import discourseComputed from "discourse-common/utils/decorators";
+import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 
 export default Component.extend({
   selection: null,
@@ -25,12 +26,12 @@ export default Component.extend({
 
     if (this.input) {
       const dateTime = moment(this.input);
-      const closestTimeframe = this._findClosestTimeframe(dateTime);
-      if (closestTimeframe) {
-        this.set("selection", closestTimeframe.id);
+      const closestShortcut = this._findClosestShortcut(dateTime);
+      if (closestShortcut) {
+        this.set("selection", closestShortcut.id);
       } else {
         this.setProperties({
-          selection: "custom",
+          selection: TIME_SHORTCUT_TYPES.CUSTOM,
           _date: dateTime.format("YYYY-MM-DD"),
           _time: dateTime.format("HH:mm"),
         });
@@ -93,15 +94,8 @@ export default Component.extend({
     }
   },
 
-  _findClosestTimeframe(dateTime) {
-    const options = {
-      includeWeekend: this.includeWeekend,
-      includeFarFuture: this.includeFarFuture,
-      includeDateTime: this.includeDateTime,
-      canScheduleNow: this.includeNow || false,
-    };
-
-    return buildTimeframes(this.userTimezone, options).find((tf) => {
+  _findClosestShortcut(dateTime) {
+    return this.shortcuts.find((tf) => {
       if (tf.time) {
         const diff = tf.time.diff(dateTime);
         return 0 <= diff && diff < 60 * 1000;

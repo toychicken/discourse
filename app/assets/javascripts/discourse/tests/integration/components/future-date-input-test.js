@@ -110,6 +110,22 @@ discourseModule("Unit | Lib | select-kit/future-date-input", function (hooks) {
     },
   });
 
+  componentTest("shows the now option if enabled", {
+    template: hbs`
+        {{future-date-input
+          includeNow=true
+        }}
+      `,
+
+    async test(assert) {
+      await this.subject.expand();
+      const options = getOptions();
+      const now = I18n.t("time_shortcut.now");
+
+      assert.ok(options.includes(now));
+    },
+  });
+
   function getOptions() {
     return Array.from(
       queryAll(`.select-kit-collection .select-kit-row`).map(

@@ -1,6 +1,8 @@
 import {
   LATER_TODAY_CUTOFF_HOUR,
   MOMENT_FRIDAY,
+  MOMENT_SATURDAY,
+  MOMENT_SUNDAY,
   MOMENT_THURSDAY,
   START_OF_DAY_HOUR,
   laterToday,
@@ -273,15 +275,20 @@ export default Component.extend({
   },
 
   _hideDynamicOptions(options) {
-    if (now(this.userTimezone).hour() >= LATER_TODAY_CUTOFF_HOUR) {
+    const _now = now(this.userTimezone);
+    if (_now.hour() >= LATER_TODAY_CUTOFF_HOUR) {
       this._hideOption(options, TIME_SHORTCUT_TYPES.LATER_TODAY);
     }
 
-    if (now(this.userTimezone).day() >= MOMENT_THURSDAY) {
+    if (_now.day === MOMENT_SUNDAY || _now.day() >= MOMENT_THURSDAY) {
       this._hideOption(options, TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
     }
 
-    if (now(this.userTimezone).day() >= MOMENT_FRIDAY) {
+    if (
+      _now.day() === MOMENT_FRIDAY ||
+      _now.day() === MOMENT_SATURDAY ||
+      _now.day() === MOMENT_SUNDAY
+    ) {
       this._hideOption(options, TIME_SHORTCUT_TYPES.THIS_WEEKEND);
     }
   },

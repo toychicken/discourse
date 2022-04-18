@@ -5,6 +5,7 @@ import componentTest, {
 import {
   discourseModule,
   exists,
+  fakeTime,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -51,29 +52,33 @@ discourseModule("Unit | Lib | select-kit/future-date-input", function (hooks) {
   });
 
   componentTest("renders default options", {
-    template: hbs`
-        {{future-date-input
-          options=(hash
-            none="time_shortcut.select_timeframe"
-          )
-        }}
-      `,
+    template: hbs`{{future-date-input}}`,
+
+    beforeEach() {
+      const monday = "2100-12-13T08:00:00";
+      this.clock = fakeTime(monday, this.currentUser._timezone, true);
+    },
 
     async test(assert) {
-      assert.ok(exists(".future-date-input-selector"), "Selector is rendered");
-
-      assert.ok(
-        this.subject.header().label() ===
-          I18n.t("time_shortcut.select_timeframe"),
-        "Default text is rendered"
-      );
-
       await this.subject.expand();
+      const options = getOptions();
+      const expected = [
+        I18n.t("time_shortcut.later_today"),
+        I18n.t("time_shortcut.tomorrow"),
+        I18n.t("time_shortcut.later_this_week"),
+        I18n.t("time_shortcut.start_of_next_business_week_alt"),
+        I18n.t("time_shortcut.two_weeks"),
+        I18n.t("time_shortcut.next_month"),
+        I18n.t("time_shortcut.two_months"),
+        I18n.t("time_shortcut.three_months"),
+        I18n.t("time_shortcut.four_months"),
+        I18n.t("time_shortcut.six_months"),
+        I18n.t("time_shortcut.one_year"),
+        I18n.t("time_shortcut.forever"),
+        I18n.t("time_shortcut.custom"),
+      ];
 
-      assert.ok(
-        exists(".select-kit-collection"),
-        "List of options is rendered"
-      );
+      assert.deepEqual(options, expected);
     },
   });
 

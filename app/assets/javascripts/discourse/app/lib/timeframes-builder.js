@@ -27,7 +27,9 @@ export function processDynamicTimeframes(timeframes, timezone) {
 
 function hideTimeframe(timeframes, timeframeId) {
   const timeframe = timeframes.findBy("id", timeframeId);
-  timeframe.hidden = true;
+  if (timeframe) {
+    timeframe.hidden = true;
+  }
 }
 
 export function formatTime(timeframes) {

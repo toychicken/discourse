@@ -1,15 +1,13 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
-import {
-  formatTime,
-  processDynamicTimeframes,
-} from "discourse/lib/timeframes-builder";
+import { formatTime } from "discourse/lib/timeframes-builder";
 import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import discourseComputed from "discourse-common/utils/decorators";
 import {
   extendedDefaultTimeShortcuts,
+  hideDynamicTimeShortcuts,
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
@@ -71,19 +69,17 @@ export default Component.extend({
       shortcuts.push(shortcutsFactory.now());
     }
 
-    processDynamicTimeframes(shortcuts, this.userTimezone);
+    shortcuts = hideDynamicTimeShortcuts(shortcuts, this.userTimezone);
     formatTime(shortcuts);
 
-    return shortcuts
-      .filter((t) => !t.hidden)
-      .map((tf) => {
-        return {
-          id: tf.id,
-          name: I18n.t(tf.label),
-          time: tf.time,
-          timeFormatted: tf.timeFormatted,
-        };
-      });
+    return shortcuts.map((s) => {
+      return {
+        id: s.id,
+        name: I18n.t(s.label),
+        time: s.time,
+        timeFormatted: s.timeFormatted,
+      };
+    });
   },
 
   @action

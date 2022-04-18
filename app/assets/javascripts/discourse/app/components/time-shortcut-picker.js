@@ -1,9 +1,4 @@
 import {
-  LATER_TODAY_CUTOFF_HOUR,
-  MOMENT_FRIDAY,
-  MOMENT_SATURDAY,
-  MOMENT_SUNDAY,
-  MOMENT_THURSDAY,
   START_OF_DAY_HOUR,
   laterToday,
   now,
@@ -12,6 +7,7 @@ import {
 import {
   TIME_SHORTCUT_TYPES,
   defaultTimeShortcuts,
+  hideDynamicTimeShortcuts,
   specialShortcutOptions,
 } from "discourse/lib/time-shortcut";
 import discourseComputed, {
@@ -185,7 +181,7 @@ export default Component.extend({
     } else {
       options = defaultTimeShortcuts(userTimezone);
     }
-    this._hideDynamicOptions(options);
+    options = hideDynamicTimeShortcuts(options, userTimezone);
 
     let specialOptions = specialShortcutOptions();
     if (this.lastCustomDate && this.lastCustomTime) {
@@ -272,29 +268,5 @@ export default Component.extend({
         option.timeFormatted = option.time.format(I18n.t(option.timeFormatKey));
       }
     });
-  },
-
-  _hideDynamicOptions(options) {
-    const _now = now(this.userTimezone);
-    if (_now.hour() >= LATER_TODAY_CUTOFF_HOUR) {
-      this._hideOption(options, TIME_SHORTCUT_TYPES.LATER_TODAY);
-    }
-
-    if (_now.day === MOMENT_SUNDAY || _now.day() >= MOMENT_THURSDAY) {
-      this._hideOption(options, TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
-    }
-
-    if (
-      _now.day() === MOMENT_FRIDAY ||
-      _now.day() === MOMENT_SATURDAY ||
-      _now.day() === MOMENT_SUNDAY
-    ) {
-      this._hideOption(options, TIME_SHORTCUT_TYPES.THIS_WEEKEND);
-    }
-  },
-
-  _hideOption(options, optionId) {
-    const option = options.findBy("id", optionId);
-    option.hidden = true;
   },
 });

@@ -340,7 +340,7 @@ def run(dns_client)
 
         # Pick the newest healthy target as the one to use. At this point targets
         # are guaranteed to have addresses.
-        target = host.srv_targets.sort_by { |_, t| t.first_seen }.first[1]
+        target = host.srv_targets.sort_by { |_, t| t.first_seen }.reverse.first[1]
         resolved[host.hostname] = target.addresses
       rescue => e
         error("Failed to resolve DNS for #{host.hostname} - #{e}")

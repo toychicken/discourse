@@ -55,6 +55,8 @@ require 'pry-rails' if Rails.env.development?
 
 require 'discourse_fonts'
 
+require_relative '../lib/ember_cli'
+
 if defined?(Bundler)
   bundler_groups = [:default]
 
@@ -147,7 +149,6 @@ module Discourse
     end
 
     config.assets.precompile += %w{
-      application.js
       vendor.js
       admin.js
       browser-detect.js
@@ -179,8 +180,17 @@ module Discourse
       discourse/tests/test_starter.js
     }
 
-    if ENV['EMBER_CLI_PROD_ASSETS'] == "0"
+    if EmberCli.enabled?
       config.assets.precompile += %w{
+        discourse.js
+        test-support.js
+        test-helpers.js
+        scripts/discourse-test-listen-boot
+        scripts/discourse-boot
+      }
+    else
+      config.assets.precompile += %w{
+        application.js
         discourse/tests/test-support-rails.js
         discourse/tests/test-helpers-rails.js
         vendor-theme-tests.js
@@ -271,6 +281,21 @@ module Discourse
 
     Sprockets.register_mime_type 'application/javascript', extensions: ['.js', '.es6', '.js.es6'], charset: :unicode
     Sprockets.register_postprocessor 'application/javascript', DiscourseJsProcessor
+
+    # The sprockets sourcemap pipeline overrites our ember-cli-generated sourcemaps, so let's disable it
+    # (it doesn't work with our DiscourseJsProcessor anyway)
+    config.assets.configure do |env|
+      env.cache = nil # TODO REMOVE THIS
+      env.unregister_processor('application/javascript', Sprockets::Preprocessors::DefaultSourceMap)
+      env.unregister_postprocessor('application/javascript', Sprockets::Rails::SourcemappingUrlProcessor)
+    end
+
+    if EmberCli.enabled?
+      Discourse::Application.initializer :prepend_ember_assets do |app|
+        # Needs to be in its own initializer so it runs after Sprockets' append_assets_path
+        app.config.assets.paths.unshift "#{app.config.root}/app/assets/javascripts/discourse/dist/assets"
+      end
+    end
 
     # This class doesn't exist in Sprockets 4, but ember-rails tries to 'autoload' it
     # Define an empty class to prevent an error

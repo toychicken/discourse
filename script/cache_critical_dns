@@ -58,6 +58,11 @@ class Host
   def has_any_address?
     !addresses.empty?
   end
+
+  def purge_addresses
+    @ip4_addresses = Set.new
+    @ip6_addresses = Set.new
+  end
 end
 
 class SRVTarget < Host
@@ -350,6 +355,9 @@ def run(dns_client)
       # fallback to original behavior
       if !host
         host = Host.new(hostname)
+      else
+        # we don't want stale addresses kept around
+        host.purge_addresses
       end
 
       begin
